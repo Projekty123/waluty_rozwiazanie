@@ -3,7 +3,21 @@ const amount = document.getElementById("amount");
 const calculateBtn = document.getElementById("calculate-btn");
 const result = document.getElementById("result");
 
-calculateBtn.addEventListener("click", function () {
+async function getExchangeRate(currencyCode) {
+    const response = await fetch(
+        `https://api.nbp.pl/api/exchangerates/rates/a/${currencyCode.toLowerCase()}/?format=json`
+    );
+
+    if (!response.ok) {
+        throw new Error("Nie udało się pobrać kursu.");
+    }
+
+    const data = await response.json();
+
+    return data.rates[0].mid;
+}
+
+calculateBtn.addEventListener("click", async function () {
     const selectedCurrency = currency.value;
     const enteredAmount = Number(amount.value);
 
@@ -47,7 +61,7 @@ calculateBtn.addEventListener("click", function () {
 
     result.innerHTML = `
         <div class="alert alert-success">
-            <span>Dane są poprawne. Wkrótce pobierzemy kurs ${selectedCurrency}.</span>
+            <span>Kurs ${selectedCurrency}: ${rate} PLN</span>
         </div>
     `;
 });
