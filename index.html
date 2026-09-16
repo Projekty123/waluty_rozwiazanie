@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kalkulator walut</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="min-h-screen bg-base-200 flex items-center justify-center p-4">
+
+    <main class="card w-full max-w-md bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <h1 class="card-title text-3xl">
+                Kalkulator walut
+            </h1>
+
+            <p class="text-base-content/70">
+                Przelicz walutę na PLN według aktualnego kursu NBP.
+            </p>
+
+            <div class="form-control mt-4">
+                <label class="label">
+                    <span class="label-text">Waluta</span>
+                </label>
+
+                <select id="currency" class="select select-bordered">
+                    <option value="">Wybierz walutę</option>
+                    <option value="EUR">EUR - euro</option>
+                    <option value="USD">USD - dolar amerykański</option>
+                    <option value="GBP">GBP - funt brytyjski</option>
+                    <option value="CHF">CHF - frank szwajcarski</option>
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Kwota</span>
+                </label>
+
+                <input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    placeholder="Np. 100"
+                    class="input input-bordered"
+                />
+            </div>
+
+            <button id="calculate-btn" class="btn btn-primary mt-4">
+                Przelicz
+            </button>
+
+            <div id="result" class="mt-4">
+                <!-- Tutaj później pojawi się wynik -->
+            </div>
+
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
