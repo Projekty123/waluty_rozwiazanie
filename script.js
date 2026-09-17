@@ -25,7 +25,7 @@ calculateBtn.addEventListener("click", async function () {
 
     if (selectedCurrency === "") {
         result.innerHTML = `
-            <div class="alert alert-error">
+            <div class="alert alert-error alert-soft">
                 <span>Wybierz walutę.</span>
             </div>
         `;
@@ -34,7 +34,7 @@ calculateBtn.addEventListener("click", async function () {
 
     if (amount.value.trim() === "") {
         result.innerHTML = `
-            <div class="alert alert-error">
+            <div class="alert alert-error alert-soft">
                 <span>Wpisz kwotę.</span>
             </div>
         `;
@@ -43,7 +43,7 @@ calculateBtn.addEventListener("click", async function () {
 
     if (isNaN(enteredAmount)) {
         result.innerHTML = `
-            <div class="alert alert-error">
+            <div class="alert alert-error alert-soft">
                 <span>Podana kwota musi być liczbą.</span>
             </div>
         `;
@@ -52,16 +52,29 @@ calculateBtn.addEventListener("click", async function () {
 
     if (enteredAmount <= 0) {
         result.innerHTML = `
-            <div class="alert alert-error">
+            <div class="alert alert-error alert-soft">
                 <span>Kwota musi być większa od zera.</span>
             </div>
         `;
         return;
     }
 
+    const rate = await getExchangeRate(selectedCurrency);
+
+    const resultInPLN = enteredAmount * rate;
+
     result.innerHTML = `
-        <div class="alert alert-success">
-            <span>Kurs ${selectedCurrency}: ${rate} PLN</span>
+        <div class="alert alert-success alert-soft">
+            <div>
+                <p class="font-bold text-lg">
+                    ${enteredAmount.toFixed(2)} ${selectedCurrency} =
+                    ${resultInPLN.toFixed(2)} PLN
+                </p>
+
+                <p class="text-sm">
+                    Kurs: 1 ${selectedCurrency} = ${rate.toFixed(4)} PLN
+                </p>
+            </div>
         </div>
     `;
 });
