@@ -17,6 +17,42 @@ async function getExchangeRate(currencyCode) {
     return data.rates[0].mid;
 }
 
+function showResult(amount, currencyCode, rate) {
+    const resultInPLN = amount * rate;
+
+    result.innerHTML = `
+        <div class="alert alert-success alert-soft">
+            <div>
+                <p class="font-bold text-lg">
+                    ${amount.toFixed(2)} ${currencyCode} =
+                    ${resultInPLN.toFixed(2)} PLN
+                </p>
+
+                <p class="text-sm">
+                    Kurs: 1 ${currencyCode} = ${rate.toFixed(4)} PLN
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+function showError(message) {
+    result.innerHTML = `
+        <div class="alert alert-error alert-soft">
+            <span>${message}</span>
+        </div>
+    `;
+}
+
+function showLoading() {
+    result.innerHTML = `
+        <div class="alert alert-info alert-soft">
+            <span class="loading loading-spinner loading-sm"></span>
+            <span>Pobieranie aktualnego kursu...</span>
+        </div>
+    `;
+}
+
 calculateBtn.addEventListener("click", async function () {
     const selectedCurrency = currency.value;
     const enteredAmount = Number(amount.value);
@@ -24,74 +60,38 @@ calculateBtn.addEventListener("click", async function () {
     result.innerHTML = "";
 
     if (selectedCurrency === "") {
-        result.innerHTML = `
-            <div class="alert alert-error alert-soft">
-                <span>Wybierz walutę.</span>
-            </div>
-        `;
+        showError("Wybierz walutę.");
         return;
     }
 
     if (amount.value.trim() === "") {
-        result.innerHTML = `
-            <div class="alert alert-error alert-soft">
-                <span>Wpisz kwotę.</span>
-            </div>
-        `;
+        showError("Wpisz kwotę.");
         return;
     }
 
     if (isNaN(enteredAmount)) {
-        result.innerHTML = `
-            <div class="alert alert-error alert-soft">
-                <span>Podana kwota musi być liczbą.</span>
-            </div>
-        `;
+        showError("Podana kwota musi być liczbą.");
         return;
     }
 
     if (enteredAmount <= 0) {
-        result.innerHTML = `
-            <div class="alert alert-error alert-soft">
-                <span>Kwota musi być większa od zera.</span>
-            </div>
-        `;
+        showError("Kwota musi być większa od zera.");
         return;
     }
 
-    result.innerHTML = `
-        <div class="alert alert-info alert-soft">
-            <span class="loading loading-spinner loading-sm"></span>
-            <span>Pobieranie aktualnego kursu...</span>
-        </div>
-    `;
+    calculateBtn.disabled = true;
+
+    showLoading();
 
     try {
         const rate = await getExchangeRate(selectedCurrency);
 
-        const resultInPLN = enteredAmount * rate;
-
-        result.innerHTML = `
-            <div class="alert alert-success alert-soft">
-                <div>
-                    <p class="font-bold text-lg">
-                        ${enteredAmount.toFixed(2)} ${selectedCurrency} =
-                        ${resultInPLN.toFixed(2)} PLN
-                    </p>
-
-                    <p class="text-sm">
-                        Kurs: 1 ${selectedCurrency} = ${rate.toFixed(4)} PLN
-                    </p>
-                </div>
-            </div>
-        `;
+        showResult(enteredAmount, selectedCurrency, rate);
     } catch (error) {
-        result.innerHTML = `
-            <div class="alert alert-error alert-soft">
-                <span>
-                    Nie udało się pobrać aktualnego kursu. Spróbuj ponownie później.
-                </span>
-            </div>
-        `;
+        showError(
+            "Nie udało się pobrać aktualnego kursu. Spróbuj ponownie później."
+        );
+    } finally {
+        calculateBtn.disabled = false;
     }
 });
