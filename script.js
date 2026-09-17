@@ -59,22 +59,32 @@ calculateBtn.addEventListener("click", async function () {
         return;
     }
 
-    const rate = await getExchangeRate(selectedCurrency);
+    try {
+        const rate = await getExchangeRate(selectedCurrency);
 
-    const resultInPLN = enteredAmount * rate;
+        const resultInPLN = enteredAmount * rate;
 
-    result.innerHTML = `
-        <div class="alert alert-success alert-soft">
-            <div>
-                <p class="font-bold text-lg">
-                    ${enteredAmount.toFixed(2)} ${selectedCurrency} =
-                    ${resultInPLN.toFixed(2)} PLN
-                </p>
+        result.innerHTML = `
+            <div class="alert alert-success alert-soft">
+                <div>
+                    <p class="font-bold text-lg">
+                        ${enteredAmount.toFixed(2)} ${selectedCurrency} =
+                        ${resultInPLN.toFixed(2)} PLN
+                    </p>
 
-                <p class="text-sm">
-                    Kurs: 1 ${selectedCurrency} = ${rate.toFixed(4)} PLN
-                </p>
+                    <p class="text-sm">
+                        Kurs: 1 ${selectedCurrency} = ${rate.toFixed(4)} PLN
+                    </p>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    } catch (error) {
+        result.innerHTML = `
+            <div class="alert alert-error alert-soft">
+                <span>
+                    Nie udało się pobrać aktualnego kursu. Spróbuj ponownie później.
+                </span>
+            </div>
+        `;
+    }
 });
