@@ -59,6 +59,13 @@ calculateBtn.addEventListener("click", async function () {
         return;
     }
 
+    result.innerHTML = `
+        <div class="alert alert-info alert-soft">
+            <span class="loading loading-spinner loading-sm"></span>
+            <span>Pobieranie aktualnego kursu...</span>
+        </div>
+    `;
+
     try {
         const rate = await getExchangeRate(selectedCurrency);
 
